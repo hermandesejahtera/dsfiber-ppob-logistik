@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: dsfiber-app
+    working_dir: /app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+      - ./storage:/app/storage
+    environment:
+      - APP_ENV=development
+      - APP_DEBUG=true
+      - DB_HOST=db
+      - REDIS_HOST=redis
+    depends_on:
+      - db
+      - redis
+    networks:
+      - dsfiber-network
+    command: php -S 0.0.0.0:8000 -t public
+
+  db:
+    image: mysql:8.0
+    container_name: dsfiber-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=dsfiber
+      - MYSQL_USER=dsfiber
+      - MYSQL_PASSWORD=dsfiber123
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - dsfiber-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: dsfiber-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - dsfiber-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 5s
+      retries: 5
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: dsfiber-phpmyadmin
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=dsfiber
+      - PMA_PASSWORD=dsfiber123
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - dsfiber-network
+
+volumes:
+  db_data:
+  redis_data:
+
+networks:
+  dsfiber-network:
+    driver: bridge
