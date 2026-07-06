@@ -29,12 +29,18 @@ class Connection
 
     private function connect(): void
     {
+        $host = $this->config['host'] ?? $this->config['DB_HOST'] ?? 'localhost';
+        $user = $this->config['user'] ?? $this->config['DB_USERNAME'] ?? $this->config['DB_USER'] ?? 'root';
+        $password = $this->config['password'] ?? $this->config['DB_PASSWORD'] ?? '';
+        $database = $this->config['database'] ?? $this->config['DB_DATABASE'] ?? $this->config['DB_NAME'] ?? 'dsfiber';
+        $port = $this->config['port'] ?? $this->config['DB_PORT'] ?? 3306;
+
         $this->connection = new mysqli(
-            $this->config['host'] ?? 'localhost',
-            $this->config['user'] ?? 'root',
-            $this->config['password'] ?? '',
-            $this->config['database'] ?? 'dsfiber',
-            $this->config['port'] ?? 3306
+            $host,
+            $user,
+            $password,
+            $database,
+            $port
         );
 
         if ($this->connection->connect_error) {

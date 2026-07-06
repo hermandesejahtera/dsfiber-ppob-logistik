@@ -8,30 +8,38 @@ namespace DSFiber\Domains\Catalog\Models;
 class Product
 {
     public int $id;
-    public string $code; // VOUCHER_CODE
+    public string $external_id;
+    public string $provider;
+    public string $category;
     public string $name;
-    public string $category; // internet, tv, pulsa, pln, etc
-    public int $price;
-    public int $selling_price;
-    public string $provider; // rajabiller provider code
-    public string $status; // active, inactive
-    public string $created_at;
-    public string $updated_at;
+    public string $description;
+    public float $price;
+    public float $provider_price;
+    public string $status;
+    public array $metadata;
+    public ?string $last_synced_at;
+    public ?string $created_at;
+    public ?string $updated_at;
 
     public function __construct(
-        string $code,
-        string $name,
+        string $external_id,
+        string $provider,
         string $category,
-        int $price,
-        int $selling_price,
-        string $provider
+        string $name,
+        float $price,
+        float $provider_price,
+        string $description = '',
+        string $status = 'ACTIVE'
     ) {
-        $this->code = $code;
-        $this->name = $name;
-        $this->category = $category;
-        $this->price = $price;
-        $this->selling_price = $selling_price;
+        $this->external_id = $external_id;
         $this->provider = $provider;
-        $this->status = 'active';
+        $this->category = $category;
+        $this->name = $name;
+        $this->description = $description;
+        $this->price = $price;
+        $this->provider_price = $provider_price;
+        $this->status = $status;
+        $this->metadata = [];
+        $this->last_synced_at = null;
     }
 }

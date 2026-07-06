@@ -6,12 +6,12 @@
 
 define('BASE_PATH', dirname(__DIR__));
 
+require_once BASE_PATH . '/config/bootstrap.php';
+
 header('Content-Type: application/json');
 
 try {
-    // Load environment
-    $env = parse_ini_file(BASE_PATH . '/.env');
-    $webhookSecret = $env['BITESHIP_WEBHOOK_SECRET'] ?? '';
+    $webhookSecret = env('BITESHIP_WEBHOOK_SECRET', '');
 
     // Verify webhook signature
     $signature = $_SERVER['HTTP_X_SIGNATURE'] ?? '';

@@ -11,13 +11,15 @@ define('SEEDERS_PATH', BASE_PATH . '/database/seeders');
 
 echo "\n=== DSFiber Database Installation ===\n\n";
 
+require_once BASE_PATH . '/config/bootstrap.php';
+
 try {
     // Load environment
     if (!file_exists(BASE_PATH . '/.env')) {
         throw new Exception('.env file not found. Copy .env.example to .env');
     }
 
-    $env = parse_ini_file(BASE_PATH . '/.env');
+    $env = $_ENV;
 
     // Connect to database
     $dsn = sprintf(

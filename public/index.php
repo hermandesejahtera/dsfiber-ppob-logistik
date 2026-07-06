@@ -17,7 +17,7 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
 // Load environment variables
-require_once __DIR__ . '/config/bootstrap.php';
+require_once __DIR__ . '/../config/bootstrap.php';
 
 // Initialize Router
 $router = new Router();

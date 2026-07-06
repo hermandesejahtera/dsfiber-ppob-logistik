@@ -29,18 +29,34 @@ class AuthService
     /**
      * Register new user
      */
-    public function register(string $phone, string $pin, string $name, string $email): array
+    public function register(string $phone, string $pin, string $fullName, string $email): array
     {
-        // Check if user already exists
         if ($this->userRepo->findByPhone($phone)) {
             return ['success' => false, 'message' => 'User already exists'];
         }
 
         $pinHash = $this->pinHasher->hash($pin);
-        $user = new User($phone, $pinHash, $name, $email);
+        $passwordHash = hash('sha256', $pin);
+        $username = $phone;
+
+        $user = new User(
+            $username,
+            $phone,
+            $passwordHash,
+            $pinHash,
+            $fullName,
+            $email,
+            'RETAIL'
+        );
+
         $userId = $this->userRepo->create($user);
 
-        return ['success' => true, 'user_id' => $userId];
+        return [
+            'success' => true,
+            'user_id' => $userId,
+            'logo_url' => env('APP_LOGO_URL', '/assets/logo-dsfiber.svg'),
+            'app_name' => 'DSFiber PPOB & Logistik',
+        ];
     }
 
     /**
@@ -58,12 +74,20 @@ class AuthService
             return ['success' => false, 'message' => 'Invalid PIN'];
         }
 
-        if ($user->status !== 'active') {
+        if ($user->status !== 'ACTIVE') {
             return ['success' => false, 'message' => 'User account inactive'];
         }
 
-        $token = $this->jwt->generate(['user_id' => $user->id, 'phone' => $user->phone]);
+        $token = $this->jwt->generate(['user_id' => $user->id, 'phone' => $user->phone, 'user_type' => $user->user_type]);
 
-        return ['success' => true, 'token' => $token, 'user_id' => $user->id];
+        return [
+            'success' => true,
+            'token' => $token,
+            'user_id' => $user->id,
+            'user_type' => $user->user_type,
+            'full_name' => $user->full_name,
+            'logo_url' => env('APP_LOGO_URL', '/assets/logo-dsfiber.svg'),
+            'app_name' => 'DSFiber PPOB & Logistik',
+        ];
     }
 }

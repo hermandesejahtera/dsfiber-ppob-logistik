@@ -3,6 +3,7 @@
 namespace DSFiber\Http\Controllers\API\v1;
 
 use DSFiber\Domains\Catalog\Services\CatalogService;
+use DSFiber\Domains\Catalog\Services\ProductSyncService;
 
 /**
  * Catalog Controller
@@ -10,10 +11,12 @@ use DSFiber\Domains\Catalog\Services\CatalogService;
 class CatalogController
 {
     private CatalogService $catalogService;
+    private ProductSyncService $syncService;
 
-    public function __construct(CatalogService $catalogService)
+    public function __construct(CatalogService $catalogService, ProductSyncService $syncService)
     {
         $this->catalogService = $catalogService;
+        $this->syncService = $syncService;
     }
 
     public function getAllProducts(): array
@@ -51,5 +54,11 @@ class CatalogController
         }
 
         return ['success' => true, 'data' => $product];
+    }
+
+    public function syncProducts(): array
+    {
+        $synced = $this->syncService->syncProducts();
+        return ['success' => true, 'synced' => $synced];
     }
 }
