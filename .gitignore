@@ -1,0 +1,38 @@
+# Dependencies
+/vendor/
+composer.lock
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# Cache
+/storage/cache/*
+!/storage/cache/.gitkeep
+
+# Uploads (KYC)
+/storage/uploads/*
+!/storage/uploads/.gitkeep
+
+# OS
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Build
+/build/
+/dist/
+.phpunit.result.cache

@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS waybills (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    waybill_number VARCHAR(50) NOT NULL UNIQUE,
+    user_id BIGINT UNSIGNED NOT NULL,
+    courier_code VARCHAR(20) NOT NULL,
+    origin_address TEXT NOT NULL,
+    destination_address TEXT NOT NULL,
+    recipient_name VARCHAR(100) NOT NULL,
+    recipient_phone VARCHAR(20) NOT NULL,
+    weight INT NOT NULL,
+    cost DECIMAL(15, 2) NOT NULL,
+    status ENUM('CREATED', 'PENDING', 'PICKED_UP', 'IN_TRANSIT', 'DELIVERED', 'RETURNED', 'CANCELLED') DEFAULT 'CREATED',
+    tracking_status JSON,
+    gateway_reference VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    delivered_at TIMESTAMP NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX (user_id),
+    INDEX (waybill_number),
+    INDEX (status),
+    INDEX (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
